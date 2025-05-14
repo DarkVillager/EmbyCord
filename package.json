@@ -1,18 +1,18 @@
 {
-  "name": "MBCord",
-  "version": "3.0.0",
-  "description": "An Emby/Jellyfin rich presence client for Discord",
+  "name": "embycord",
+  "version": "1.0.0",
+  "description": "An Emby rich presence client for Discord",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "build": "node build-production.js",
-    "build:mac": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/mac/icon.icns --platform=darwin --arch=x64",
-    "build:win64": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=win32 --arch=x64",
-    "build:linux64": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=x64",
-    "build:linux32": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=ia32",
-    "build:win32": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=win32 --arch=ia32",
-    "build:armv7l": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=armv7l",
-    "build:arm64": "electron-packager . MBCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=arm64"
+    "build:mac": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/mac/icon.icns --platform=darwin --arch=x64",
+    "build:win64": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=win32 --arch=x64",
+    "build:linux64": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=x64",
+    "build:linux32": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=ia32",
+    "build:win32": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=win32 --arch=ia32",
+    "build:armv7l": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=armv7l",
+    "build:arm64": "electron-packager . EmbyCord --out=build --overwrite --asar --icon=icons/win/icon.ico --platform=linux --arch=arm64"
   },
   "prodBuilds": [
     "mac",
@@ -21,10 +21,13 @@
     "linux64",
     "linux32"
   ],
-  "author": "oonqt",
+  "author": "DarkVillager",
+  "contributors": [
+    "oonqt"
+  ],
   "license": "MIT",
   "devDependencies": {
-    "electron": "^13.3.0",
+    "electron": "^30.5.1",
     "electron-installer-zip": "^0.1.2",
     "electron-packager": "^15.2.0",
     "rimraf": "^3.0.2",
@@ -34,7 +37,8 @@
     "colors": "^1.4.0",
     "dedent-js": "^1.0.1",
     "deep-cleaner": "^1.2.1",
-    "discord-rpc": "^3.2.0",
+    "discord-rpc": "^4.0.1",
+    "electron-common-ipc": "^16.0.4",
     "electron-context-menu": "^3.1.1",
     "electron-store": "^8.0.0",
     "electron-unhandled": "^3.0.2",
@@ -49,5 +53,5 @@
     "untildify": "^4.0.0",
     "uuid": "^8.3.2"
   },
-  "homepage": "https://github.com/oonqt/MBCord"
+  "homepage": "https://github.com/DarkVillager/EmbyCord"
 }

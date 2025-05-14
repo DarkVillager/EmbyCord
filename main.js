@@ -119,7 +119,7 @@ let updateChecker;
 			Development Mode: ${is.development}
 			Platform: ${process.platform} (Version ${os.release()})
 			Architecture: ${process.arch}
-			MBCord version: ${version}
+			EmbyCord version: ${version}
 			Node version: ${process.versions.node}
 			Electron version: ${electronVersion}
 			Chrome version: ${chromeVersion}

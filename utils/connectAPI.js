@@ -9,7 +9,7 @@ class ConnectAPI {
     getConnectUser(nameOrEmail, password) {
         return new Promise((resolve, reject) => {
             request({
-                url: 'https://connect.emby.media/service/user/authenticate',
+                url: 'http://localhost:8096/user/authenticate',
                 method: 'POST',
                 headers: {
                     'X-Application': `${name}/${version}`
