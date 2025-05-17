@@ -5,11 +5,12 @@ class ConnectAPI {
         this.appName = appName;
         this.appVersion = appVersion;
     }
+    
 
     getConnectUser(nameOrEmail, password) {
         return new Promise((resolve, reject) => {
             request({
-                url: 'http://localhost:8096/user/authenticate',
+                url: `${store.get('servers').find((server) => server.isSelected)}/user/authenticate`,
                 method: 'POST',
                 headers: {
                     'X-Application': `${name}/${version}`
@@ -31,7 +32,7 @@ class ConnectAPI {
     getConnectServers(connectUserToken, connectUserId) {
         return new Promise((resolve, reject) => {
             request({
-                url: `https://connect.emby.media/service/servers?userId=${connectUserId}`,
+                url: `${store.get('servers').find((server) => server.isSelected)}?userId=${connectUserId}`,
                 headers: {
                     'X-Application': `${this.appName}/${this.appVersion}`,
                     'X-Connect-UserToken': connectUserToken
