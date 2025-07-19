@@ -47,6 +47,7 @@
     "keytar": "^7.7.0",
     "material-icons": "^0.7.2",
     "materialize-css": "^1.0.0",
+    "minimal-discord-rpc": "^1.0.4",
     "mkdirp": "^1.0.4",
     "request": "^2.88.2",
     "semver": "^7.3.5",

@@ -21,7 +21,6 @@ const Store = require('electron-store');
 const keytar = require('keytar');
 const StartupHandler = require('./utils/startupHandler');
 const MBClient = require('./utils/MBClient');
-const DiscordRPC = require('discord-rpc');
 const UpdateChecker = require('./utils/updateChecker');
 const Logger = require('./utils/logger');
 const serverDiscoveryClient = require('./utils/serverDiscoveryClient');
@@ -54,11 +53,7 @@ let tray;
  * @type {MBClient}
  */
 let mbc;
-
-/**
- * @type {DiscordRPC.Client}
- */
-let rpc;
+let RPC;
 
 let presenceUpdate;
 let connectRPCTimeout;
@@ -208,7 +203,7 @@ let updateChecker;
 		const doDisplay = store.get('doDisplayStatus');
 
 		logger.debug(`doDisplayStatus: ${doDisplay}`);
-		if (!doDisplay && rpc) await rpc.clearActivity();
+		if (!doDisplay && RPC) await RPC.clearActivity();
 	};
 
 	const appBarHide = (doHide) => {
@@ -478,26 +473,28 @@ let updateChecker;
 	};
 
 	const disconnectRPC = async () => {
-		if (rpc) {
+		if (RPC) {
 			logger.info('Disconnecting from Discord');
 			clearTimeout(connectRPCTimeout);
-			rpc.transport.removeAllListeners('close');
-			await rpc.clearActivity();
-			await rpc.destroy();
-			rpc = null;
+			RPC.transport.removeAllListeners('close');
+			await RPC.clearActivity();
+			await RPC.destroy();
+			RPC = null;
 		}
 	};
 
 	const connectRPC = () => {
 		return new Promise((resolve) => {
-			if (rpc) return logger.warn('Attempted to connect to RPC pipe while already connected');
+			if (RPC) return logger.warn('Attempted to connect to RPC pipe while already connected');
 
 			const server = getSelectedServer();
 			if (!server) return logger.warn('No selected server');
 
-			rpc = new DiscordRPC.Client({ transport: 'ipc' });
-			rpc
-				.login({ clientId: clientIds[server.serverType] })
+			RPC = new Client({
+				clientId: clientIds[server.serverType],
+			});
+			RPC
+				.login()
 				.then(resolve)
 				.catch(() => {
 					logger.error(
@@ -506,7 +503,7 @@ let updateChecker;
 					);
 				});
 
-			rpc.transport.once('close', () => {
+			RPC.on('close', () => {
 				disconnectRPC();
 
 				logger.warn(
@@ -517,7 +514,7 @@ let updateChecker;
 				connectRPCTimeout = setTimeout(connectRPC, discordConnectRetryMS);
 			});
 
-			rpc.transport.once('open', () => {
+			RPC.on('ready', () => {
 				logger.info(`Connected to Discord (Server type: ${server.serverType})`);
 			});
 		});
@@ -584,7 +581,7 @@ let updateChecker;
 				if (server.ignoredViews.includes(NPItemLibraryID)) {
 					// prettier-ignore
 					logger.debug(`${NPItem.Name} is in library with ID ${NPItemLibraryID} which is on the ignored library list, will not set status`);
-					if (rpc) await rpc.clearActivity();
+					if (RPC) await RPC.clearActivity();
 					return;
 				}
 
@@ -617,6 +614,7 @@ let updateChecker;
 				);
 
 				const defaultProperties = {
+					type: NPItem.Type === 'Audio' ? ActivityType.Listening : ActivityType.Watching,
 					largeImageKey: 'large',
 					largeImageText: `${NPItem.Type === 'Audio' ? 'Listening' : 'Watching'
 						} on ${session.Client}`,
@@ -638,7 +636,7 @@ let updateChecker;
 						// prettier-ignore
 						const episodeNum = NPItem.IndexNumber;
 
-						rpc.setActivity({
+						RPC.setActivity({
 							details: `Watching ${NPItem.SeriesName} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
 								}`,
 							state: `${seasonNum ? `S${seasonNum.toString().padStart(2, '0')}` : ''
@@ -649,7 +647,7 @@ let updateChecker;
 						break;
 					}
 					case 'Movie': {
-						rpc.setActivity({
+						RPC.setActivity({
 							details: 'Watching a Movie',
 							state: `${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
 								}`,
@@ -660,7 +658,7 @@ let updateChecker;
 					case 'MusicVideo': {
 						const artists = NPItem.Artists.splice(0, 3); // we only want 3 artists
 
-						rpc.setActivity({
+						RPC.setActivity({
 							details: `Watching ${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
 								}`,
 							state: `By ${artists.length ? artists.join(', ') : 'Unknown Artist'
@@ -675,7 +673,7 @@ let updateChecker;
 							(ArtistInfo) => ArtistInfo.Name
 						).splice(0, 3);
 
-						rpc.setActivity({
+						RPC.setActivity({
 							details: `Listening to ${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
 								}`,
 							state: `By ${artists.length
@@ -689,7 +687,7 @@ let updateChecker;
 						break;
 					}
 					default:
-						rpc.setActivity({
+						RPC.setActivity({
 							details: 'Watching Other Content',
 							state: NPItem.Name,
 							...defaultProperties
@@ -697,7 +695,7 @@ let updateChecker;
 				}
 			} else {
 				logger.debug('No session, clearing activity');
-				if (rpc) await rpc.clearActivity();
+				if (RPC) await RPC.clearActivity();
 			}
 		} catch (error) {
 			logger.error(`Failed to set activity: ${error}`);

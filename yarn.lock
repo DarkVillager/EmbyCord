@@ -357,13 +357,6 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bindings@^1.3.0:
-  version "1.5.0"
-  resolved "https://registry.npmjs.org/bindings/-/bindings-1.5.0.tgz"
-  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
-  dependencies:
-    file-uri-to-path "1.0.0"
-
 bl@^0.9.0:
   version "0.9.5"
   resolved "https://registry.npmjs.org/bl/-/bl-0.9.5.tgz"
@@ -1301,11 +1294,6 @@ figures@^1.4.0:
     escape-string-regexp "^1.0.5"
     object-assign "^4.1.0"
 
-file-uri-to-path@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz"
-  integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
-
 filename-reserved-regex@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/filename-reserved-regex/-/filename-reserved-regex-2.0.0.tgz"
@@ -2099,6 +2087,11 @@ mimic-response@^3.1.0:
   resolved "https://registry.npmjs.org/mimic-response/-/mimic-response-3.1.0.tgz"
   integrity sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==
 
+minimal-discord-rpc@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.npmjs.org/minimal-discord-rpc/-/minimal-discord-rpc-1.0.4.tgz"
+  integrity sha512-7c7XVPqlfOJ9pmPGjxvqHiXYzbIN3bsW30eUqj724N7EvCZ9hW1nqMMy4pUvZ3dad97s1JHVg3Bj+afIxiajHQ==
+
 minimatch@^3.0.4, minimatch@^3.1.1, "minimatch@2 || 3":
   version "3.1.2"
   resolved "https://registry.npmjs.org/minimatch/-/minimatch-3.1.2.tgz"
@@ -2186,11 +2179,6 @@ node-abi@^3.3.0:
   integrity sha512-OhYaY5sDsIka7H7AtijtI9jwGYLyl29eQn/W623DiN/MIv5sUqc4g7BIDThX+gb7di9f6xK02nkp8sdfFWZLTg==
   dependencies:
     semver "^7.3.5"
-
-node-addon-api@^1.3.0:
-  version "1.7.2"
-  resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.7.2.tgz"
-  integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
 
 node-addon-api@^4.3.0:
   version "4.3.0"
@@ -2646,14 +2634,6 @@ readable-stream@~1.0.2:
     inherits "~2.0.1"
     isarray "0.0.1"
     string_decoder "~0.10.x"
-
-"register-scheme@github:devsnek/node-register-scheme":
-  version "0.0.2"
-  resolved "git+ssh://git@github.com/devsnek/node-register-scheme.git"
-  integrity sha512-PoY1M32D9+oeY3y15h8jXW12QTCDD1nG/mcXsY0MHgrkJ9lz5/acPpUkHuDvFdGPNoIaBWX/SNzqIRc0hhlqYQ==
-  dependencies:
-    bindings "^1.3.0"
-    node-addon-api "^1.3.0"
 
 request@^2.88.2:
   version "2.88.2"
