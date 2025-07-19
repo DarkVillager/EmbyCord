@@ -27,6 +27,7 @@ const Logger = require('./utils/logger');
 const serverDiscoveryClient = require('./utils/serverDiscoveryClient');
 const { scrubObject, booleanToYN } = require('./utils/helpers');
 const { version, name, author, homepage } = require('./package.json');
+const { Client, ActivityType } = require("minimal-discord-rpc");
 const {
 	clientIds,
 	iconUrl,
@@ -203,9 +204,9 @@ let updateChecker;
 
 	const toggleDisplay = async () => {
 		store.set('doDisplayStatus', !store.get('doDisplayStatus'));
-		
+
 		const doDisplay = store.get('doDisplayStatus');
-		
+
 		logger.debug(`doDisplayStatus: ${doDisplay}`);
 		if (!doDisplay && rpc) await rpc.clearActivity();
 	};
@@ -226,7 +227,7 @@ let updateChecker;
 		mainWindow.setSize(size.x, size.y);
 		mainWindow.loadFile(path.join(__dirname, 'static', `${pageName}.html`));
 
-		if(preventAppQuitOnClose) {
+		if (preventAppQuitOnClose) {
 			mainWindow.addListener('close', (closeNoExit = (e) => {
 				e.preventDefault(); // prevent app close
 				mainWindow.hide(); // hide window
@@ -270,11 +271,11 @@ let updateChecker;
 				? { ...savedServer, isSelected: true }
 				: { ...savedServer, isSelected: false };
 		});
-			
+
 		store.set('servers', servers);
 
 		tray.setContextMenu(buildTrayMenu(servers));
-		
+
 		mainWindow.webContents.send('RECEIVE_TYPE', server.serverType);
 
 		await stopPresenceUpdater();
@@ -500,8 +501,7 @@ let updateChecker;
 				.then(resolve)
 				.catch(() => {
 					logger.error(
-						`Failed to connect to Discord. Attempting to reconnect in ${
-							discordConnectRetryMS / 1000
+						`Failed to connect to Discord. Attempting to reconnect in ${discordConnectRetryMS / 1000
 						} seconds`
 					);
 				});
@@ -510,8 +510,7 @@ let updateChecker;
 				disconnectRPC();
 
 				logger.warn(
-					`Discord RPC connection closed. Attempting to reconnect in ${
-						discordConnectRetryMS / 1000
+					`Discord RPC connection closed. Attempting to reconnect in ${discordConnectRetryMS / 1000
 					} seconds`
 				);
 
@@ -551,7 +550,7 @@ let updateChecker;
 		}
 
 		setPresence();
-		if(!presenceUpdate) presenceUpdate = setInterval(setPresence, presenceUpdateIntervalMS);
+		if (!presenceUpdate) presenceUpdate = setInterval(setPresence, presenceUpdateIntervalMS);
 	};
 
 	const setPresence = async () => {
@@ -595,21 +594,20 @@ let updateChecker;
 				const currentEpochSeconds = new Date().getTime() / 1000;
 				const startTimestamp = Math.round(
 					currentEpochSeconds -
-						Math.round(session.PlayState.PositionTicks / 10000 / 1000)
+					Math.round(session.PlayState.PositionTicks / 10000 / 1000)
 				);
 				const endTimestamp = Math.round(
 					currentEpochSeconds +
-						Math.round(
-							(session.NowPlayingItem.RunTimeTicks -
-								session.PlayState.PositionTicks) /
-								10000 /
-								1000
-						)
+					Math.round(
+						(session.NowPlayingItem.RunTimeTicks -
+							session.PlayState.PositionTicks) /
+						10000 /
+						1000
+					)
 				);
 
 				logger.debug(
-					`Time until media end: ${
-						endTimestamp - currentEpochSeconds
+					`Time until media end: ${endTimestamp - currentEpochSeconds
 					}, been playing since: ${startTimestamp}`
 				);
 
@@ -620,9 +618,8 @@ let updateChecker;
 
 				const defaultProperties = {
 					largeImageKey: 'large',
-					largeImageText: `${
-						NPItem.Type === 'Audio' ? 'Listening' : 'Watching'
-					} on ${session.Client}`,
+					largeImageText: `${NPItem.Type === 'Audio' ? 'Listening' : 'Watching'
+						} on ${session.Client}`,
 					smallImageKey: session.PlayState.IsPaused ? 'pause' : 'play',
 					smallImageText: session.PlayState.IsPaused ? 'Paused' : 'Playing',
 					instance: false
@@ -642,14 +639,11 @@ let updateChecker;
 						const episodeNum = NPItem.IndexNumber;
 
 						rpc.setActivity({
-							details: `Watching ${NPItem.SeriesName} ${
-								NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
-							}`,
-							state: `${
-								seasonNum ? `S${seasonNum.toString().padStart(2, '0')}` : ''
-							}${
-								episodeNum ? `E${episodeNum.toString().padStart(2, '0')}: ` : ''
-							}${NPItem.Name}`,
+							details: `Watching ${NPItem.SeriesName} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
+								}`,
+							state: `${seasonNum ? `S${seasonNum.toString().padStart(2, '0')}` : ''
+								}${episodeNum ? `E${episodeNum.toString().padStart(2, '0')}: ` : ''
+								}${NPItem.Name}`,
 							...defaultProperties
 						});
 						break;
@@ -657,9 +651,8 @@ let updateChecker;
 					case 'Movie': {
 						rpc.setActivity({
 							details: 'Watching a Movie',
-							state: `${NPItem.Name} ${
-								NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
-							}`,
+							state: `${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
+								}`,
 							...defaultProperties
 						});
 						break;
@@ -668,12 +661,10 @@ let updateChecker;
 						const artists = NPItem.Artists.splice(0, 3); // we only want 3 artists
 
 						rpc.setActivity({
-							details: `Watching ${NPItem.Name} ${
-								NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
-							}`,
-							state: `By ${
-								artists.length ? artists.join(', ') : 'Unknown Artist'
-							}`,
+							details: `Watching ${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
+								}`,
+							state: `By ${artists.length ? artists.join(', ') : 'Unknown Artist'
+								}`,
 							...defaultProperties
 						});
 						break;
@@ -685,16 +676,14 @@ let updateChecker;
 						).splice(0, 3);
 
 						rpc.setActivity({
-							details: `Listening to ${NPItem.Name} ${
-								NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
-							}`,
-							state: `By ${
-								artists.length
-									? artists.join(', ')
-									: albumArtists.length
+							details: `Listening to ${NPItem.Name} ${NPItem.ProductionYear ? `(${NPItem.ProductionYear})` : ''
+								}`,
+							state: `By ${artists.length
+								? artists.join(', ')
+								: albumArtists.length
 									? albumArtists.join(', ')
 									: 'Unknown Artist'
-							}`,
+								}`,
 							...defaultProperties
 						});
 						break;
@@ -864,7 +853,7 @@ let updateChecker;
 	// 			title: name,
 	// 			detail: 'An error occured and we failed to fetch the connect servers linked to your account, please try again later.'
 	// 		});
-			
+
 	// 		return event.reply('CONNECT_ERROR');
 	// 	}
 
@@ -971,7 +960,7 @@ let updateChecker;
 							'Your server has been successfully added. Would you like to select it automatically?',
 						buttons: ['Yes', 'No']
 					});
-		
+
 					if (res.response === 0) {
 						selectServer(newServer);
 					}
